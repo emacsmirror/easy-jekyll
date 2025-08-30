@@ -1,10 +1,10 @@
 ;;; easy-jekyll.el --- Major mode managing jekyll blogs -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2017-2021 by Masashi Miyaura
+;; Copyright (C) 2017-2025 by Masashi Miyaura
 
 ;; Author: Masashi Miyaura
 ;; URL: https://github.com/masasam/emacs-easy-jekyll
-;; Version: 2.6.30
+;; Version: 2.7.30
 ;; Package-Requires: ((emacs "25.1") (request "0.3.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -117,6 +117,11 @@
 
 (defcustom easy-jekyll-helm-ag nil
   "Helm-ag use flg."
+  :group 'easy-jekyll
+  :type 'string)
+
+(defcustom easy-jekyll-counsel-ag nil
+  "Counsel-ag use flg."
   :group 'easy-jekyll
   :type 'string)
 
@@ -1156,14 +1161,16 @@ to the server."
 
 ;;;###autoload
 (defun easy-jekyll-ag ()
-  "Search for blog article with `counsel-ag' or `helm-ag'."
+  "Search for blog article with `consult-ripgrep' or `counsel-ag' or `helm-ag'."
   (interactive)
   (easy-jekyll-with-env
-   (if (and (require 'counsel nil t) (not easy-jekyll-helm-ag))
-       (counsel-ag nil (expand-file-name easy-jekyll-postdir easy-jekyll-basedir))
-     (if (require 'helm-ag nil t)
-	 (helm-ag (expand-file-name easy-jekyll-postdir easy-jekyll-basedir))
-       (error "'counsel' or 'helm-ag' is not installed")))))
+   (if (and (require 'consult nil t) (not easy-jekyll-counsel-ag) (not easy-jekyll-helm-ag))
+	   (consult-ripgrep (expand-file-name easy-jekyll-postdir easy-jekyll-basedir) nil)
+	 (if (and (require 'counsel nil t) (not easy-jekyll-helm-ag))
+		 (counsel-ag nil (expand-file-name easy-jekyll-postdir easy-jekyll-basedir))
+       (if (require 'helm-ag nil t)
+		   (helm-ag (expand-file-name easy-jekyll-postdir easy-jekyll-basedir))
+		 (error "'consult' or 'counsel' or 'helm-ag' is not installed"))))))
 
 ;;;###autoload
 (defun easy-jekyll-open-config ()
@@ -1181,7 +1188,7 @@ to the server."
 p .. Preview          g .. Refresh       A .. Deploy AWS S3    u .. Undraft file
 v .. Open view-mode   s .. Sort time     T .. Publish timer    W .. AWS S3 timer
 d .. Delete post      c .. Open config   D .. Draft list       f .. Select filename
-P .. Publish clever   C .. Deploy GCS    a .. Search with ag   H .. GitHub timer
+P .. Publish clever   C .. Deploy GCS    a .. Search articles  H .. GitHub timer
 < .. Previous blog    > .. Next blog     , .. Pre postdir      . .. Next postdir
 F .. Full help [tab]  ; .. Select blog   / .. Select postdir   q .. Quit easy-jekyll
 ")
@@ -1190,7 +1197,7 @@ F .. Full help [tab]  ; .. Select blog   / .. Select postdir   q .. Quit easy-je
 p .. Preview          g .. Refresh       A .. Deploy AWS S3    s .. Sort character
 v .. Open view-mode   D .. Draft list    T .. Publish timer    W .. AWS S3 timer
 d .. Delete post      c .. Open config   u .. Undraft file     f .. Select filename
-P .. Publish clever   C .. Deploy GCS    a .. Search with ag   H .. GitHub timer
+P .. Publish clever   C .. Deploy GCS    a .. Search articles  H .. GitHub timer
 < .. Previous blog    > .. Next blog     , .. Pre postdir      . .. Next postdir
 F .. Full help [tab]  ; .. Select blog   / .. Select postdir   q .. Quit easy-jekyll
 "))

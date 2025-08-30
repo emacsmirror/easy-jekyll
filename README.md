@@ -57,10 +57,11 @@ If there is firebase command, easy-jekyll-firebase-deploy will be executed.
 
 ![easy-jekyll-helm-ag](image/easy-jekyll-helm-ag.png)
 
-You can search blog article with [counsel-ag](https://github.com/abo-abo/swiper) or [helm-ag](https://github.com/syohex/emacs-helm-ag).
-If both are installed, counsel-ag takes precedence at default and
-you can use helm-ag by writing the following to .emacs or init.el.
+You can search blog article with [consult-ripgrep](https://github.com/minad/consult) or [counsel-ag](https://github.com/abo-abo/swiper) or [helm-ag](https://github.com/syohex/emacs-helm-ag).
+If all installed, it will run in the order of priority of consult-ripgrep counsel-ag helm-ag and 
+you can use helm-ag or counsel-ag by writing the following to .emacs or init.el.
 
+	(setq easy-jekyll-counsel-ag t)
 	(setq easy-jekyll-helm-ag t)
 
 If you deploy your blog at [Firebase](https://firebase.google.com/).
